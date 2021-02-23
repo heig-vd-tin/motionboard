@@ -1,0 +1,5 @@
+---
+BasedOnStyle: Google
+BreakBeforeBraces: Linux
+IndentWidth: '4'
+...
