@@ -1,0 +1,119 @@
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectName="DSP280x"
+ProjectDir="C:\Documents and Settings\coin\Mes documents\Mes projets\robot07\software\motionboard\"
+ProjectType=Executable
+CPUFamily=TMS320C28XX
+Tool="Compiler"
+Tool="CustomBuilder"
+Tool="DspBiosBuilder"
+Tool="Linker"
+Config="Debug"
+Config="Release"
+
+[Source Files]
+Source="include\bangbang.h"
+Source="include\DSP280x_DefaultISR.h"
+Source="include\DSP280x_PieCtrl.h"
+Source="include\DSP280x_PieVect.h"
+Source="include\IQmathLib.h"
+Source="include\leds.h"
+Source="include\pwm.h"
+Source="lib\IQmath.lib"
+Source="src\adc.c"
+Source="src\bangbang.c"
+Source="src\chenille.c"
+Source="src\cputimers.c"
+Source="src\DSP280x_CodeStartBranch.asm"
+Source="src\DSP280x_DefaultIsr.c"
+Source="src\eqep.c"
+Source="src\fan.c"
+Source="src\globalvarsdefs.c"
+Source="src\hall.c"
+Source="src\i2c.c"
+Source="src\leds.c"
+Source="src\main.c"
+Source="src\piectrl.c"
+Source="src\pievect.c"
+Source="src\pwm.c"
+Source="src\qcos.asm"
+Source="src\qsin.asm"
+Source="src\regul.c"
+Source="src\sysctrl.c"
+Source="src\usdelay.asm"
+Source="cmd\DSP2806_ROM.cmd"
+Source="cmd\DSP280x_Headers_nonBIOS.cmd"
+
+["Compiler" Settings: "Debug"]
+Options=-g -q -o3 -fr"C:\Documents and Settings\coin\Mes documents\Mes projets\robot07\software\motionboard\Debug" -fs"C:\Documents and Settings\coin\Mes documents\Mes projets\robot07\software\motionboard\Debug" -i"../include" -d"_DEBUG" -d"LARGE_MODEL" -ml -mt -v28
+
+["Compiler" Settings: "Release"]
+Options=-q -o3 -fr"C:\Documents and Settings\coin\Mes documents\Mes projets\robot07\software\motionboard\Release" -i"../include" -d"LARGE_MODEL" -d"RELEASE" -ml -v28
+
+["DspBiosBuilder" Settings: "Debug"]
+Options=-v28
+
+["DspBiosBuilder" Settings: "Release"]
+Options=-v28
+
+["Linker" Settings: "Debug"]
+Options=-q -c -m".\Debug\motionboard.map" -o".\Debug\motionboard.out" -stack0x200 -w -x -i"include" -l"rts2800_ml.lib"
+
+["Linker" Settings: "Release"]
+Options=-q -c -m".\Release\motionboard.map" -o".\Release\motionboard.out" -stack0x200 -x -i"include" -l"rts2800_ml.lib"
+
+["include\bangbang.h" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["include\bangbang.h" Settings: "Release"]
+ExcludeFromBuild=true
+
+["include\DSP280x_DefaultISR.h" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["include\DSP280x_DefaultISR.h" Settings: "Release"]
+ExcludeFromBuild=true
+
+["include\DSP280x_PieCtrl.h" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["include\DSP280x_PieCtrl.h" Settings: "Release"]
+ExcludeFromBuild=true
+
+["include\DSP280x_PieVect.h" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["include\DSP280x_PieVect.h" Settings: "Release"]
+ExcludeFromBuild=true
+
+["include\IQmathLib.h" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["include\IQmathLib.h" Settings: "Release"]
+ExcludeFromBuild=true
+
+["include\leds.h" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["include\leds.h" Settings: "Release"]
+ExcludeFromBuild=true
+
+["include\pwm.h" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["include\pwm.h" Settings: "Release"]
+ExcludeFromBuild=true
+
+["cmd\DSP2806_ROM.cmd" Settings: "Debug"]
+LinkOrder=1
+
+["cmd\DSP2806_ROM.cmd" Settings: "Release"]
+LinkOrder=1
+
+["cmd\DSP280x_Headers_nonBIOS.cmd" Settings: "Debug"]
+LinkOrder=2
+
+["cmd\DSP280x_Headers_nonBIOS.cmd" Settings: "Release"]
+LinkOrder=1
+
