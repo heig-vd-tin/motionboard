@@ -4,28 +4,27 @@
  */
 #include "global.h"
 
-typedef struct
-{
-	// Maximum values
-	float maximum_acceleration; // tick/Tech^2
-	float maximum_deceleration; // tick/Tech^2
-	float maximum_speed;	    // tick/Tech
-	float distance; 		    // tick
+typedef struct {
+    // Maximum values
+    float maximum_acceleration;  // tick/Tech^2
+    float maximum_deceleration;  // tick/Tech^2
+    float maximum_speed;         // tick/Tech
+    float distance;              // tick
 
-	// Current values
-	float acceleration;
-	float deceleration;
-	float speed;
+    // Current values
+    float acceleration;
+    float deceleration;
+    float speed;
 
-	// Position information
-	float distance_left;
+    // Position information
+    float distance_left;
 
-	// Internal values and flags
-	float old_speed;
-	bool start_flag;
-	bool busy_flag;
-	bool direction;
-	bool stop_flag;
+    // Internal values and flags
+    float old_speed;
+    bool start_flag;
+    bool busy_flag;
+    bool direction;
+    bool stop_flag;
 
 } PROFILE;
 
@@ -38,20 +37,20 @@ typedef struct
  * @param final_pos Final position [64.0]             (ticks)
  * @param current_pos Current position [64.0]         (ticks)
  */
-void init_profile(PROFILE *h, float acceleration, float deceleration, float maximum_speed, float distance, float tech)
+void init_profile(PROFILE *h, float acceleration, float deceleration,
+                  float maximum_speed, float distance, float tech)
 {
-	volatile int toto = (float)tech;
+    volatile int toto = (float)tech;
 
-	h->maximum_acceleration = acceleration;
-	h->maximum_deceleration = deceleration;
-	h->maximum_speed = maximum_speed;
-	h->distance = distance;
+    h->maximum_acceleration = acceleration;
+    h->maximum_deceleration = deceleration;
+    h->maximum_speed = maximum_speed;
+    h->distance = distance;
 
-	if(h->busy_flag != true)
-		h->old_speed = 0.0;
-	h->busy_flag = true;
-	h->start_flag = true;
-	h->stop_flag = 0;
+    if (h->busy_flag != true) h->old_speed = 0.0;
+    h->busy_flag = true;
+    h->start_flag = true;
+    h->stop_flag = 0;
 }
 
 /**
@@ -60,9 +59,9 @@ void init_profile(PROFILE *h, float acceleration, float deceleration, float maxi
  * @param meas_position Position Measurement
  * @return Next position
  */
-float profile_process (PROFILE *h, float position)
+float profile_process(PROFILE *h, float position)
 {
- 	return h->distance+position;
+    return h->distance + position;
 }
 
 /**
@@ -73,16 +72,13 @@ float profile_process (PROFILE *h, float position)
  */
 void profile_reset(PROFILE *h)
 {
-	h->speed = 0;
-	h->busy_flag = false;
-	h->start_flag = false;
+    h->speed = 0;
+    h->busy_flag = false;
+    h->start_flag = false;
 }
 
 /**
  * BangBang smooth stop
  * @param handle Handle of this bangbang calculation
  */
-void profile_smooth_stop(PROFILE *h)
-{
-	h->stop_flag = true;
-}
+void profile_smooth_stop(PROFILE *h) { h->stop_flag = true; }

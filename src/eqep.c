@@ -7,11 +7,12 @@
  * angles mechanique et électrique ainsi que la vitesse. Un méchanisme
  * d'interpolation permet d'obtenir une plus grande résolution sur la vitesse.
  */
-#include "device.h"
-#include "common.h"
-#include "IQmathLib.h"
-#include "hall.h"
 #include "eqep.h"
+
+#include "IQmathLib.h"
+#include "common.h"
+#include "device.h"
+#include "hall.h"
 #include "qmath.h"
 
 // Ram Execution...
@@ -21,29 +22,28 @@
 // Initialize GPIO for EQep1.
 void EQep1_InitGpio()
 {
-  EALLOW;
-  GpioCtrlRegs.GPAMUX2.bit.GPIO20 = MUX_GPIO20_EQEP1A;
-  GpioCtrlRegs.GPAMUX2.bit.GPIO21 = MUX_GPIO21_EQEP1B;
-  GpioCtrlRegs.GPAMUX2.bit.GPIO23 = MUX_GPIO23_EQEP1I;
-  EDIS;
+    EALLOW;
+    GpioCtrlRegs.GPAMUX2.bit.GPIO20 = MUX_GPIO20_EQEP1A;
+    GpioCtrlRegs.GPAMUX2.bit.GPIO21 = MUX_GPIO21_EQEP1B;
+    GpioCtrlRegs.GPAMUX2.bit.GPIO23 = MUX_GPIO23_EQEP1I;
+    EDIS;
 }
 
 // Initialize GPIO for EQep2.
 void EQep2_InitGpio()
 {
-  EALLOW;
-  GpioCtrlRegs.GPAMUX2.bit.GPIO24 = MUX_GPIO24_EQEP2A;
-  GpioCtrlRegs.GPAMUX2.bit.GPIO25 = MUX_GPIO25_EQEP2B;
-  GpioCtrlRegs.GPAMUX2.bit.GPIO26 = MUX_GPIO26_EQEP2I;
-  EDIS;
+    EALLOW;
+    GpioCtrlRegs.GPAMUX2.bit.GPIO24 = MUX_GPIO24_EQEP2A;
+    GpioCtrlRegs.GPAMUX2.bit.GPIO25 = MUX_GPIO25_EQEP2B;
+    GpioCtrlRegs.GPAMUX2.bit.GPIO26 = MUX_GPIO26_EQEP2I;
+    EDIS;
 }
 
 // Initialize GPIO for both EQep modules
-void
-EQep_InitGpio()
+void EQep_InitGpio()
 {
-	EQep1_InitGpio();
-	EQep2_InitGpio();
+    EQep1_InitGpio();
+    EQep2_InitGpio();
 }
 
 /**
@@ -62,154 +62,150 @@ EQep_InitGpio()
  * doit être le plus élevé possible pour maximiser les performances de la
  * boucle de position.
  */
-void
-EQep_InitCommonRegisters(volatile struct EQEP_REGS *EQepRegsP)
+void EQep_InitCommonRegisters(volatile struct EQEP_REGS *EQepRegsP)
 {
-  volatile struct EQEP_REGS *EQepRegs;
+    volatile struct EQEP_REGS *EQepRegs;
 
-  EQepRegs = EQepRegsP;
+    EQepRegs = EQepRegsP;
 
-  EQepRegs->QEPCTL.bit.QPEN=0; 	  	// QEP enable
-  EQepRegs->QCAPCTL.bit.CEN=0;      // QEP Capture Enable
+    EQepRegs->QEPCTL.bit.QPEN = 0;  // QEP enable
+    EQepRegs->QCAPCTL.bit.CEN = 0;  // QEP Capture Enable
 
-  EQepRegs->QDECCTL.bit.QSRC=0;	// Quadrature mode enabled
-  EQepRegs->QEPCTL.bit.FREE_SOFT=2; // Position counter is unaffected by emulation suspend
-  EQepRegs->QEPCTL.bit.PCRM=1;	    // Position counter reset on maximum position
-  EQepRegs->QEPCTL.bit.QCLM=0; 	    // Latch QCTMRLAT and QCPRDLAT on QPOSCNT reading
-  EQepRegs->QEPCTL.bit.IEL=1;      // Latch Position on index event
+    EQepRegs->QDECCTL.bit.QSRC = 0;  // Quadrature mode enabled
+    EQepRegs->QEPCTL.bit.FREE_SOFT =
+        2;  // Position counter is unaffected by emulation suspend
+    EQepRegs->QEPCTL.bit.PCRM =
+        1;  // Position counter reset on maximum position
+    EQepRegs->QEPCTL.bit.QCLM =
+        0;  // Latch QCTMRLAT and QCPRDLAT on QPOSCNT reading
+    EQepRegs->QEPCTL.bit.IEL = 1;  // Latch Position on index event
 
-  EQepRegs->QPOSMAX=0xFFFFFFFF;     // QPOSMAX receive maximum value as possible
-  EQepRegs->QEPCTL.bit.QPEN=1; 	  	// QEP enable
+    EQepRegs->QPOSMAX =
+        0xFFFFFFFF;                 // QPOSMAX receive maximum value as possible
+    EQepRegs->QEPCTL.bit.QPEN = 1;  // QEP enable
 
-  EQepRegs->QCAPCTL.bit.UPPS=1;   	// 1/1 for unit position
-  EQepRegs->QCAPCTL.bit.CCPS=1;	    // 1/1 for CAP clock
-  EQepRegs->QCAPCTL.bit.CEN=1; 	    // QEP Capture Enable
+    EQepRegs->QCAPCTL.bit.UPPS = 1;  // 1/1 for unit position
+    EQepRegs->QCAPCTL.bit.CCPS = 1;  // 1/1 for CAP clock
+    EQepRegs->QCAPCTL.bit.CEN = 1;   // QEP Capture Enable
 
-  EQepRegs->QPOSCNT = 0; 			// Reset position counter
+    EQepRegs->QPOSCNT = 0;  // Reset position counter
 }
 
-void
-EQep_InitRegisters()
+void EQep_InitRegisters()
 {
-  EQep_InitCommonRegisters(&EQep1Regs);
-  EQep_InitCommonRegisters(&EQep2Regs);
+    EQep_InitCommonRegisters(&EQep1Regs);
+    EQep_InitCommonRegisters(&EQep2Regs);
 }
 
-void
-InitEQep ()
+void InitEQep()
 {
-  EQep_InitRegisters();
-  EQep_InitGpio();
+    EQep_InitRegisters();
+    EQep_InitGpio();
 }
 
-void
-EQep_set_zero(eqep_handle p)
+void EQep_set_zero(eqep_handle p)
 {
-  volatile struct EQEP_REGS *EQepRegs; // Thanks to MSL for this good trick
+    volatile struct EQEP_REGS *EQepRegs;  // Thanks to MSL for this good trick
 
-  // Save EQep pointer in a local pointer
-  EQepRegs = p->EQepRegs;
+    // Save EQep pointer in a local pointer
+    EQepRegs = p->EQepRegs;
 
-  // Reinit position
-  p->position = 0;
-  p->revolution = 0;
-  p->oldposition = EQepRegs->QPOSCNT;
-  p->oldposition2 = 0;
-  p->velocity = 0;
-  p->delta_pos = 0;
+    // Reinit position
+    p->position = 0;
+    p->revolution = 0;
+    p->oldposition = EQepRegs->QPOSCNT;
+    p->oldposition2 = 0;
+    p->velocity = 0;
+    p->delta_pos = 0;
 }
 
 /**
  * EQep Position Measurement
  */
 #define oldpos p->oldposition
-#define middlecount (EQepRegs->QPOSMAX/2)
-void
-EQep_process(eqep_handle p)
+#define middlecount (EQepRegs->QPOSMAX / 2)
+void EQep_process(eqep_handle p)
 {
-  volatile struct EQEP_REGS *EQepRegs; // Thanks to MSL for this good trick
-  volatile unsigned long curpos;
+    volatile struct EQEP_REGS *EQepRegs;  // Thanks to MSL for this good trick
+    volatile unsigned long curpos;
 
-  // Save EQep pointer in a local pointer
-  EQepRegs = p->EQepRegs;
+    // Save EQep pointer in a local pointer
+    EQepRegs = p->EQepRegs;
 
-  // What is direction ?
-  p->direction  = EQepRegs->QEPSTS.bit.QDF;
+    // What is direction ?
+    p->direction = EQepRegs->QEPSTS.bit.QDF;
 
-  // Calculate mechanical and electrical angle in 1.15 format
-  p->theta_raw = EQepRegs->QPOSCNT - EQepRegs->QPOSILAT;
-  p->theta_mech = _IQmpy(p->theta_raw, _IQ(32768/4096));
-  p->theta_elec = (p->theta_mech*p->pole_pairs*2) + p->cal_angle;
+    // Calculate mechanical and electrical angle in 1.15 format
+    p->theta_raw = EQepRegs->QPOSCNT - EQepRegs->QPOSILAT;
+    p->theta_mech = _IQmpy(p->theta_raw, _IQ(32768 / 4096));
+    p->theta_elec = (p->theta_mech * p->pole_pairs * 2) + p->cal_angle;
 
-  // Count revolution and Check an index occurence
-  if (EQepRegs->QFLG.bit.IEL == 1)
-  {
-    EQepRegs->QCLR.bit.IEL = 1;
-    p->index_sync_flag = 1;
-    p->revolution += (p->direction)?1:-1;
-  }
+    // Count revolution and Check an index occurence
+    if (EQepRegs->QFLG.bit.IEL == 1) {
+        EQepRegs->QCLR.bit.IEL = 1;
+        p->index_sync_flag = 1;
+        p->revolution += (p->direction) ? 1 : -1;
+    }
 
-  // Check an index occurence
-  if (p->sine == 0 || p->index_sync_flag == 0)
-    p->theta_elec = p->HallFunction();
+    // Check an index occurence
+    if (p->sine == 0 || p->index_sync_flag == 0)
+        p->theta_elec = p->HallFunction();
 
-  // Compute Trigonometric values
-  p->theta_sincos.sin = qsin(p->theta_elec);
-  p->theta_sincos.cos = qcos(p->theta_elec);
+    // Compute Trigonometric values
+    p->theta_sincos.sin = qsin(p->theta_elec);
+    p->theta_sincos.cos = qcos(p->theta_elec);
 
-  // Compute delta position
-  curpos = EQepRegs->QPOSCNT;
-  if(oldpos > curpos && oldpos > middlecount && curpos < middlecount)
-    p->delta_pos = EQepRegs->QPOSMAX - oldpos + curpos;
-  else if(oldpos > curpos)
-    p->delta_pos = -(oldpos - curpos);
-  else if(curpos > middlecount && oldpos < middlecount)
-    p->delta_pos = -(EQepRegs->QPOSMAX - curpos + oldpos);
-  else
-    p->delta_pos = curpos - oldpos;
+    // Compute delta position
+    curpos = EQepRegs->QPOSCNT;
+    if (oldpos > curpos && oldpos > middlecount && curpos < middlecount)
+        p->delta_pos = EQepRegs->QPOSMAX - oldpos + curpos;
+    else if (oldpos > curpos)
+        p->delta_pos = -(oldpos - curpos);
+    else if (curpos > middlecount && oldpos < middlecount)
+        p->delta_pos = -(EQepRegs->QPOSMAX - curpos + oldpos);
+    else
+        p->delta_pos = curpos - oldpos;
 
-  p->oldposition = curpos;
+    p->oldposition = curpos;
 
-  // Compute position
-  p->position += p->delta_pos;
-
+    // Compute position
+    p->position += p->delta_pos;
 }
 
 /**
  * EQep Velocity Measurement
  */
-void
-EQep_velocity (eqep_handle p)
+void EQep_velocity(eqep_handle p)
 {
-  #define SPEED_SCALE 273
-  volatile struct EQEP_REGS *EQepRegs;
-  volatile long curpos;
-  int velo = 0;
-  int veloFine = 0;
+#define SPEED_SCALE 273
+    volatile struct EQEP_REGS *EQepRegs;
+    volatile long curpos;
+    int velo = 0;
+    int veloFine = 0;
 
-  // Save EQep pointer in a local pointer
-  EQepRegs = p->EQepRegs;
+    // Save EQep pointer in a local pointer
+    EQepRegs = p->EQepRegs;
 
-  // Compute position directly from coder ticks
-  curpos = p->position;
-  velo = (curpos - p->oldposition2) * SPEED_SCALE;
-  p->oldposition2 = curpos;
+    // Compute position directly from coder ticks
+    curpos = p->position;
+    velo = (curpos - p->oldposition2) * SPEED_SCALE;
+    p->oldposition2 = curpos;
 
-  // Compte fine position from EQep p
-  if(EQepRegs->QEPSTS.bit.COEF == 0)
-    veloFine = _IQmpy(_IQdiv(EQepRegs->QCTMRLAT, EQepRegs->QCPRDLAT), _IQ(0.00366));
-  else
-    veloFine = SPEED_SCALE;
+    // Compte fine position from EQep p
+    if (EQepRegs->QEPSTS.bit.COEF == 0)
+        veloFine = _IQmpy(_IQdiv(EQepRegs->QCTMRLAT, EQepRegs->QCPRDLAT),
+                          _IQ(0.00366));
+    else
+        veloFine = SPEED_SCALE;
 
-  // If direction has changed fine position can't be computed
-  if(EQepRegs->QEPSTS.bit.CDEF == 1)
-    veloFine = 0;
+    // If direction has changed fine position can't be computed
+    if (EQepRegs->QEPSTS.bit.CDEF == 1) veloFine = 0;
 
-  // The final position is base position plus fine position
-  p->velocity = velo + veloFine;
+    // The final position is base position plus fine position
+    p->velocity = velo + veloFine;
 
-  // Finally the event clag is cleared
-  EQepRegs->QEPSTS.all=0x88;
+    // Finally the event clag is cleared
+    EQepRegs->QEPSTS.all = 0x88;
 }
 
 /**
@@ -222,8 +218,7 @@ _iq cap = 0;
 
 volatile long long oldpositionl = 0, oldpositionr = 0;
 
-void
-EQep_xy (eqep_handle pl, eqep_handle pr, long long *x, long long *y)
+void EQep_xy(eqep_handle pl, eqep_handle pr, long long *x, long long *y)
 {
 #if 0
   const _iq f_alpha = _IQ30(0.0000223349679);

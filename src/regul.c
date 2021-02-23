@@ -1,57 +1,55 @@
 #define __regulc__
 
+#include "regul.h"
+
+#include "IQmathLib.h"
+#include "common.h"
 #include "device.h"
 #include "memory.h"
-#include "common.h"
-#include "regul.h"
-#include "IQmathLib.h"
 
 extern volatile globalConfiguration global;
 
-#define PSAT  32767
+#define PSAT 32767
 #define NSAT -32767
 
-void
-InitControllersA(void)
+void InitControllersA(void)
 {
-  bldc_a.currents.gi_d = global.mca.tq_gi;
-  bldc_a.currents.kp_d = global.mca.tq_kp;
-  bldc_a.currents.gi_q = global.mca.tq_gi;
-  bldc_a.currents.kp_q = global.mca.tq_kp;
-  bldc_a.velocity.kp = (long)global.mca.sp_kp<<4;
-  bldc_a.velocity.gi = global.mca.sp_gi;
-  bldc_a.position.kp = (long)global.mca.pos_kp<<2;
-  bldc_a.position.gi = global.mca.pos_gi;
+    bldc_a.currents.gi_d = global.mca.tq_gi;
+    bldc_a.currents.kp_d = global.mca.tq_kp;
+    bldc_a.currents.gi_q = global.mca.tq_gi;
+    bldc_a.currents.kp_q = global.mca.tq_kp;
+    bldc_a.velocity.kp = (long)global.mca.sp_kp << 4;
+    bldc_a.velocity.gi = global.mca.sp_gi;
+    bldc_a.position.kp = (long)global.mca.pos_kp << 2;
+    bldc_a.position.gi = global.mca.pos_gi;
 
-  bldc_a.currents.iaction_d = 0;
-  bldc_a.currents.iaction_q = 0;
-  bldc_a.velocity.iaction = 0;
-  bldc_a.position.iaction = 0;
+    bldc_a.currents.iaction_d = 0;
+    bldc_a.currents.iaction_q = 0;
+    bldc_a.velocity.iaction = 0;
+    bldc_a.position.iaction = 0;
 }
 
-void
-InitControllersB(void)
+void InitControllersB(void)
 {
-  bldc_b.currents.gi_d = global.mcb.tq_gi;
-  bldc_b.currents.kp_d = global.mcb.tq_kp;
-  bldc_b.currents.gi_q = global.mcb.tq_gi;
-  bldc_b.currents.kp_q = global.mcb.tq_kp;
-  bldc_b.velocity.kp = (long)global.mcb.sp_kp<<4;
-  bldc_b.velocity.gi = global.mcb.sp_gi;
-  bldc_b.position.kp = (long)global.mcb.pos_kp<<2;
-  bldc_b.position.gi = global.mcb.pos_gi;
+    bldc_b.currents.gi_d = global.mcb.tq_gi;
+    bldc_b.currents.kp_d = global.mcb.tq_kp;
+    bldc_b.currents.gi_q = global.mcb.tq_gi;
+    bldc_b.currents.kp_q = global.mcb.tq_kp;
+    bldc_b.velocity.kp = (long)global.mcb.sp_kp << 4;
+    bldc_b.velocity.gi = global.mcb.sp_gi;
+    bldc_b.position.kp = (long)global.mcb.pos_kp << 2;
+    bldc_b.position.gi = global.mcb.pos_gi;
 
-  bldc_b.currents.iaction_d = 0;
-  bldc_b.currents.iaction_q = 0;
-  bldc_b.velocity.iaction = 0;
-  bldc_b.position.iaction = 0;
+    bldc_b.currents.iaction_d = 0;
+    bldc_b.currents.iaction_q = 0;
+    bldc_b.velocity.iaction = 0;
+    bldc_b.position.iaction = 0;
 }
 
-void
-InitControllers (void)
+void InitControllers(void)
 {
-  InitControllersA();
-  InitControllersB();
+    InitControllersA();
+    InitControllersB();
 }
 
 /**
@@ -95,13 +93,15 @@ int RegulPid (_iq y, _iq w, handle_controller_pid * h)
  * @param bldc : Structure de données du moteur réglé
  * @return Vectque dq de commande de tension {[1.15],[1.15]}
  */
-vectors_phases
-RegulPi_i (vectors_phases ivect, int torque, bldc_controller *bldc)
+vectors_phases RegulPi_i(vectors_phases ivect, int torque,
+                         bldc_controller *bldc)
 {
-  vectors_phases uvect;
-  uvect.d = RegulPi ((int)ivect.d, 0,      (int)bldc->currents.kp_d, bldc->currents.gi_d, &(bldc->currents.iaction_d));
-  uvect.q = RegulPi ((int)ivect.q, torque, (int)bldc->currents.kp_q, bldc->currents.gi_q, &(bldc->currents.iaction_q));
-  return uvect;
+    vectors_phases uvect;
+    uvect.d = RegulPi((int)ivect.d, 0, (int)bldc->currents.kp_d,
+                      bldc->currents.gi_d, &(bldc->currents.iaction_d));
+    uvect.q = RegulPi((int)ivect.q, torque, (int)bldc->currents.kp_q,
+                      bldc->currents.gi_q, &(bldc->currents.iaction_q));
+    return uvect;
 }
 
 /**
@@ -111,12 +111,12 @@ RegulPi_i (vectors_phases ivect, int torque, bldc_controller *bldc)
  * @param bldc : Structure de données du moteur réglé
  * @return Grandeur réglée [1.15]
  */
-int
-RegulPi_v (int y_velocity, int w_velocity, bldc_controller *bldc)
+int RegulPi_v(int y_velocity, int w_velocity, bldc_controller *bldc)
 {
-  int speed;
-  speed = RegulPi ((int)y_velocity, (int)w_velocity, bldc->velocity.kp, bldc->velocity.gi, &(bldc->velocity.iaction));
-  return speed;
+    int speed;
+    speed = RegulPi((int)y_velocity, (int)w_velocity, bldc->velocity.kp,
+                    bldc->velocity.gi, &(bldc->velocity.iaction));
+    return speed;
 }
 
 /**
@@ -126,12 +126,12 @@ RegulPi_v (int y_velocity, int w_velocity, bldc_controller *bldc)
  * @param bldc : Structure de données du moteur réglé
  * @return Grandeur réglée [1.15]
  */
-int
-RegulPi_p (long y_position, long w_position, bldc_controller *bldc)
+int RegulPi_p(long y_position, long w_position, bldc_controller *bldc)
 {
-  int position;
-  position = RegulPi (y_position, w_position, bldc->position.kp, bldc->position.gi, &(bldc->position.iaction));
-  return position;
+    int position;
+    position = RegulPi(y_position, w_position, bldc->position.kp,
+                       bldc->position.gi, &(bldc->position.iaction));
+    return position;
 }
 
 /**
@@ -141,37 +141,32 @@ int amin, amax;
 _iq tmp;
 _iq scale;
 
-_iq ala = _IQ(1.0/1.732);
+_iq ala = _IQ(1.0 / 1.732);
 
-
-three_phases
-Limits (three_phases u)
+three_phases Limits(three_phases u)
 {
-  int min, max, offset;
-  _iq uu, uv, uw;
+    int min, max, offset;
+    _iq uu, uv, uw;
 
-  // Détermine la grandeur la plus grande et la plus petite
-  if (u.u < u.v)
-  {
-    max = u.v;
-    min = u.u;
-  }
-  else
-  {
-    max = u.u;
-    min = u.v;
-  }
-  if (max < u.w)  max = u.w;
-  if (min > u.w)  min = u.w;
+    // Détermine la grandeur la plus grande et la plus petite
+    if (u.u < u.v) {
+        max = u.v;
+        min = u.u;
+    } else {
+        max = u.u;
+        min = u.v;
+    }
+    if (max < u.w) max = u.w;
+    if (min > u.w) min = u.w;
 
-  // Correction d'offset
-  offset = (max/2 + min/2);
-  uu = u.u - offset;
-  uv = u.v - offset;
-  uw = u.w - offset;
+    // Correction d'offset
+    offset = (max / 2 + min / 2);
+    uu = u.u - offset;
+    uv = u.v - offset;
+    uw = u.w - offset;
 
-  // Correction de gain
-  tmp = (long)max - (long)min;
+    // Correction de gain
+    tmp = (long)max - (long)min;
 #if 0
   if (tmp > (2L*PSAT))
     scale = _IQdiv((2L*PSAT)-1,tmp);
@@ -184,11 +179,11 @@ Limits (three_phases u)
   u.w = _IQmpy(uw, scale);
 #endif
 
-u.u = uu;
-u.v = uv;
-u.w = uw;
+    u.u = uu;
+    u.v = uv;
+    u.w = uw;
 
-  return u;
+    return u;
 }
 
 // Calcul I2t

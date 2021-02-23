@@ -1,33 +1,30 @@
 
 class C_PiController
 {
-	private: 
-		float integral_action; 
-	public: 
-		float gi; 
-		float kp;
+   private:
+    float integral_action;
 
-		C_PiController(float newGi, float newKp)
-		{
-			Reset();
-			gi = newGi; 
-			kp = newKp; 
-		}
+   public:
+    float gi;
+    float kp;
 
-		float Execute(float w, float y)
-		{
-			float e = w-y; 
+    C_PiController(float newGi, float newKp)
+    {
+        Reset();
+        gi = newGi;
+        kp = newKp;
+    }
 
-			integral_action += e*gi; 
-			if(integral_action > 1.0) integral_action = 1.0; 
-			if(integral_action < -1.0) integral_action = -1.0; 
+    float Execute(float w, float y)
+    {
+        float e = w - y;
 
-			return kp*e+integral_action;
-		}
+        integral_action += e * gi;
+        if (integral_action > 1.0) integral_action = 1.0;
+        if (integral_action < -1.0) integral_action = -1.0;
 
-		void Reset()
-		{
-			integral_action = 0.0; 
-		}
+        return kp * e + integral_action;
+    }
+
+    void Reset() { integral_action = 0.0; }
 };
-

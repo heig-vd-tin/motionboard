@@ -1,9 +1,9 @@
 #pragma once
 
-#define SAT_SP 20            // Border limit Duty Cycle
+#define SAT_SP 20  // Border limit Duty Cycle
 
-#define ADC_CONV_SPEED  50   // 50 ns per conversion
-#define ADC_NCONV       7    // 7 convertion per sequence
+#define ADC_CONV_SPEED 50  // 50 ns per conversion
+#define ADC_NCONV 7        // 7 convertion per sequence
 
 #define ADC_SOC 15;
 

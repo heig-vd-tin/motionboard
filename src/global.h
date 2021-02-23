@@ -15,54 +15,49 @@
 #ifndef DSP28x_PROJECT_H
 #define DSP28x_PROJECT_H
 
-#include "dsp2833x/DSP2833x_Device.h"     // DSP2833x Headerfile Include File
-#include "dsp2833x/DSP2833x_Examples.h"   // DSP2833x Examples Include File
-#include "iq_math/IQmathLib.h" 
-
+#include "dsp2833x/DSP2833x_Device.h"    // DSP2833x Headerfile Include File
+#include "dsp2833x/DSP2833x_Examples.h"  // DSP2833x Examples Include File
 #include "gpio.h"
+#include "iq_math/IQmathLib.h"
 #include "memory.h"
 
-#define true 1 
-#define false 0 
+#define true 1
+#define false 0
 
-#define PI 3.1415926535 
+#define PI 3.1415926535
 
-typedef struct 
-{
-  int sin; 
-  int cos;
-} tri_theta; 
-          
+typedef struct {
+    int sin;
+    int cos;
+} tri_theta;
 
-typedef struct 
-{
-  int u; 
-  int v; 
-  int w;
+typedef struct {
+    int u;
+    int v;
+    int w;
 } three_phases;
 
-typedef struct
-{
-  int d;
-  int q;
-} vectors_phases;  
+typedef struct {
+    int d;
+    int q;
+} vectors_phases;
 
-typedef struct
-{
-	float u;
-	float v;
-	float w;
+typedef struct {
+    float u;
+    float v;
+    float w;
 } three_phase;
 
-typedef struct
-{
-	float d;
-	float q;
+typedef struct {
+    float d;
+    float q;
 } two_phase;
 
-#define REMAP_INTERRUPT(A,B) EALLOW; PieVectTable.A = B; EDIS
+#define REMAP_INTERRUPT(A, B) \
+    EALLOW;                   \
+    PieVectTable.A = B;       \
+    EDIS
 #define ENABLE_INT_LVL(A) IER |= A
 #define DISABLE_INT_LVL(A) IER &= ~A
 
 #endif
-

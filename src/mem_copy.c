@@ -3,11 +3,10 @@
  */
 #include "global.h"
 
-void MemCopy(Uint16 *SourceAddr, Uint16* SourceEndAddr, Uint16* DestAddr)
+void MemCopy(Uint16* SourceAddr, Uint16* SourceEndAddr, Uint16* DestAddr)
 {
-    while(SourceAddr < SourceEndAddr)
-    {
-       *DestAddr++ = *SourceAddr++;
+    while (SourceAddr < SourceEndAddr) {
+        *DestAddr++ = *SourceAddr++;
     }
     return;
 }
