@@ -1,6 +1,3 @@
-
-
-
 #define C  	16.351
 #define CS 	17.323
 #define D	18.354
@@ -13,6 +10,3 @@
 #define A	27.500
 #define AS	29.135
 #define B	30.867
-
-
-

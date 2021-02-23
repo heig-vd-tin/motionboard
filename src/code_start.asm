@@ -1,10 +1,6 @@
-; 
-; @title   MotionBoard project v2.0
-; @file    code_start.c
-; @brief   First instructions (original code from TI)
-; @author  Yves Chevallier <yves.chevallier@kalios.ch>
-; @svn     $Id: code_start.asm 490 2008-11-15 14:24:53Z yves $
 ;
+; @title   MotionBoard project v2.0
+; @brief   First instructions (original code from TI)
 
 WD_DISABLE	.set	1		;set to 1 to disable WD, else set to 0
 
@@ -52,7 +48,7 @@ wd_disable:
 
 
 	.end
-	
+
 ;//===========================================================================
 ;// End of file.
 ;//===========================================================================

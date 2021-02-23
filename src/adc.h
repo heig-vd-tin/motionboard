@@ -1,14 +1,13 @@
-#ifndef __ADC__
-#define __ADC__
+#pragma once
 
-///////////////////////////////////////////////////////////////////////////////
-/// Define the structure of the ADC Object.                                    
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * Define the structure of the ADC Object.
+ */
 typedef struct
 {
 	float i1;
 	float i2;
-} adc_current; 
+} adc_current;
 
 typedef struct
 {
@@ -17,7 +16,7 @@ typedef struct
 	float z;
 } adc_accelerometer;
 
-typedef struct 
+typedef struct
 {
 	adc_current inverter_a;
 	adc_current inverter_b;
@@ -26,21 +25,15 @@ typedef struct
 	float power_voltage;
 	float ref1_5;
 	float ref0;
-	float offset; 
+	float offset;
 
 	adc_accelerometer accelerometer;
 } adc;
 
-typedef adc *adc_handle;  
+typedef adc *adc_handle;
 
 #define ADC_DEFAULTS {{0,0,0}, {0,0,0}, 0, 0, 0, 0, 0}
 
-////////////////////////////////////////////////////////////////////////////////
-/// Functions prototypes                                                       
-////////////////////////////////////////////////////////////////////////////////
 void Init_adc(void);
 void AdcCalibrate(void);
 void adc_save_results (adc_handle);
-
-#endif
-

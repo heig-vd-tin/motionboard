@@ -1,1 +1,1 @@
-void Init_accelerometer(void); 
+void Init_accelerometer(void);

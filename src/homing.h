@@ -1,7 +1,6 @@
-#ifndef __ENDMOVES__234djy839y83xy1
-#define __ENDMOVES__234djy839y83xy1
+#pragma once
 
-#include "global.h" 
+#include "global.h"
 
 #define FW_A  	GpioDataRegs.GPBDAT.bit.GPIO54 // IO3
 #define BW_A  	GpioDataRegs.GPBDAT.bit.GPIO53 // IO4
@@ -13,20 +12,18 @@
 
 static inline void InitLimits(void)
 {
-	EALLOW;  
-	GpioCtrlRegs.GPBPUD.bit.GPIO49 = DIS_PULLUP; 
+	EALLOW;
+	GpioCtrlRegs.GPBPUD.bit.GPIO49 = DIS_PULLUP;
 	GpioCtrlRegs.GPBMUX2.bit.GPIO49 = 0;
-	GpioCtrlRegs.GPBPUD.bit.GPIO50 = DIS_PULLUP; 
+	GpioCtrlRegs.GPBPUD.bit.GPIO50 = DIS_PULLUP;
 	GpioCtrlRegs.GPBMUX2.bit.GPIO50 = 0;
-	GpioCtrlRegs.GPBPUD.bit.GPIO51 = DIS_PULLUP; 
+	GpioCtrlRegs.GPBPUD.bit.GPIO51 = DIS_PULLUP;
 	GpioCtrlRegs.GPBMUX2.bit.GPIO51 = 0;
-	GpioCtrlRegs.GPBPUD.bit.GPIO52 = DIS_PULLUP; 
+	GpioCtrlRegs.GPBPUD.bit.GPIO52 = DIS_PULLUP;
 	GpioCtrlRegs.GPBMUX2.bit.GPIO52 = 0;
-	GpioCtrlRegs.GPBPUD.bit.GPIO53 = DIS_PULLUP; 
+	GpioCtrlRegs.GPBPUD.bit.GPIO53 = DIS_PULLUP;
 	GpioCtrlRegs.GPBMUX2.bit.GPIO53 = 0;
-	GpioCtrlRegs.GPBPUD.bit.GPIO54 = DIS_PULLUP; 
+	GpioCtrlRegs.GPBPUD.bit.GPIO54 = DIS_PULLUP;
 	GpioCtrlRegs.GPBMUX2.bit.GPIO54 = 0;
-	EDIS; 
+	EDIS;
 }
-
-#endif

@@ -1,30 +1,5 @@
-////////////////////////////////////////////////////////////////////////////////
-///  _   _        _                            _                                
-/// | | | |      |_|                          | |                               
-/// | |_| |_____  _ _____           _     _ __| |                               
-/// | |_  | ___ || |  _  \  _____  \ \  / // _  |                               
-/// | | | | ____|| | |_| | (_____)  \ \/ /( (_| |                               
-/// |_| |_|_____)|_|___  |           \__/  \____|                               
-///                  __| | Haute Ecole d'Ingenieurs                             
-///                 |___/  et de Gestion - Vaud                                 
-///                                                                             
-/// @title    Logiciel de contrôle de moteur pour la carte "motionboard"        
-/// @context  Coupe suisse de robotique 2007                                    
-/// @author   Y. Chevallier <nowox@kalios.ch>                                   
-/// @file     globalvarsdefs.c                                                  
-/// @language ASCII/C                                                           
-/// @svn      $Id: hall.c 126 2007-03-08 00:02:51Z ychevall@heig-vd.ch $        
-///                                                                             
-////////////////////////////////////////////////////////////////////////////////
+#include "device.h"
 
-////////////////////////////////////////////////////////////////////////////////
-/// Includes files.                                                             
-////////////////////////////////////////////////////////////////////////////////
-#include "device.h"   
-
-////////////////////////////////////////////////////////////////////////////////
-/// Define Global Peripheral Variables.                                         
-////////////////////////////////////////////////////////////////////////////////
 #pragma DATA_SECTION(AdcRegs,"AdcRegsFile");
 volatile struct ADC_REGS AdcRegs;
 
@@ -159,8 +134,3 @@ volatile struct FLASH_REGS FlashRegs;
 
 #pragma DATA_SECTION(XIntruptRegs,"XIntruptRegsFile");
 volatile struct XINTRUPT_REGS XIntruptRegs;
-
-////////////////////////////////////////////////////////////////////////////////
-/// End of file.                                                                
-////////////////////////////////////////////////////////////////////////////////
-

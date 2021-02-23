@@ -1,20 +1,15 @@
-
-#ifndef __MEMORY__39djndkxsj293
-#define __MEMORY__39djndkxsj293
+#pragma once
 
 #include <string.h>
 
-////////////////////////////////////////////////////////////////////////////////
-/// Global definitions                                                          
-////////////////////////////////////////////////////////////////////////////////
-typedef enum enum_ctrl_type 
+typedef enum enum_ctrl_type
 {
     OFF,                         // Inverter is off. No pwm output
     FREE_LOOP,                   // No controllers
     TORQUE,                      // Torque controller
     VELOCITY,                    // Torque and velocity controller
-    POSITION                     // Position, torque and velocity ctrl. 
-} Tctrl_type; 
+    POSITION                     // Position, torque and velocity ctrl.
+} Tctrl_type;
 
 typedef enum enum_test_type
 {
@@ -34,7 +29,7 @@ typedef enum enum_motion_mvt
     CYLOID,                      // High speed
     TRAPEZOIDAL_ACCELERATION,    // Very high speed
 
-    AUTO                         // Automatic mode 
+    AUTO                         // Automatic mode
 } Tmotion_mvt;
 
 typedef enum enum_power_state
@@ -48,22 +43,17 @@ typedef enum enum_coupling
     TWO_INDEPENDANTS_DRIVES,     // Two independants drives  (use MoveUnit A&B)
     MOTOR_A_AND_B_COUPLED,       // B = A*coupling_value     (use MoveUnit A)
     POLAR_COUPLING               // A = MUA+MUB, B = MUA-MUB (use MoveUnit A&B)
-} Tcoupling; 
+} Tcoupling;
 
-////////////////////////////////////////////////////////////////////////////////
-/// Version Information                                                          
-////////////////////////////////////////////////////////////////////////////////
+
 typedef struct
-{                                
+{
     int8  version_major;            // Major release version (0,1,2,...)
     int8  version_minor;            // Minor release version (0,1,2,...)
     int8  version_rev;              // Revision value (A,B,C,...)
 	int8  identification_code[16]; 	// Software product name ("Foo, Bar!")
 } globalVersion;
 
-////////////////////////////////////////////////////////////////////////////////
-/// Environment Information                                                     
-////////////////////////////////////////////////////////////////////////////////
 typedef struct
 {
     Tpower_state power;		// Inverter power state
@@ -74,8 +64,8 @@ typedef struct
 
     char  speed_unit;           // 0=revolution per minute (regular type)
                                 // 1=meter per second (linear type)
-                                // 2=percent of voltage_max value 
-    
+                                // 2=percent of voltage_max value
+
     char torque_unit;           // x=percent of current_max value
 
     Tcoupling coupling;         // Coupling type
@@ -84,20 +74,14 @@ typedef struct
 	float pwm_frequency; 		// Usually 24e3 kHz
 } globalEnvironment;
 
-////////////////////////////////////////////////////////////////////////////////
-/// Environment Statut                                                     
-//////////////////////////////////////////////////////////////////////////////// 
 typedef struct
 {
     float dc_voltage; 		// DC bus voltage
-    float inverter_temperature;  // Temperature of the mosfets inverter    
+    float inverter_temperature;  // Temperature of the mosfets inverter
     bool error_flag; 		// An error has occured
     int16 error_number; 	// Last error number
 } globalStatus;
 
-////////////////////////////////////////////////////////////////////////////////
-/// Motor Configuration                                                         
-////////////////////////////////////////////////////////////////////////////////
 typedef struct
 {
   Tctrl_type ctrl_type;         // Control type (Free-loop, Torque, Pos., ...)
@@ -123,15 +107,12 @@ typedef struct
 
   int16 gear_num;               // Gear numerator
   int16 gear_den;               // Gear denominator
-  
-  float hall_offset; 			// Offset (0° for 120° and 30° for 180°)
 
-  float desat; 			
+  float hall_offset; 			// Offset (0ï¿½ for 120ï¿½ and 30ï¿½ for 180ï¿½)
+
+  float desat;
 } globalMotorConfiguration;
 
-////////////////////////////////////////////////////////////////////////////////
-/// Motors Values                                                               
-////////////////////////////////////////////////////////////////////////////////
 typedef struct
 {
   float position;   // 1 = one revolution counter clockwise direction
@@ -140,9 +121,6 @@ typedef struct
   float pwm; 			// Free_loop value (+-1.0)
 } globalMotorValues;
 
-////////////////////////////////////////////////////////////////////////////////
-/// Motion movement                                                                  
-////////////////////////////////////////////////////////////////////////////////
 typedef struct
 {
   bool  busy;           // 0 = idle state, 1 = move in progress
@@ -150,17 +128,14 @@ typedef struct
   float acceleration;   // Acceleration value (% of max_current)
   float deceleration;   // Decelaration value (% of max_current)
   float velocity;       // Maximum velocity value (% of max_voltage)
-  float position;       // Move length. Same unit has motor position value 
+  float position;       // Move length. Same unit has motor position value
 } globalMove;
 
-////////////////////////////////////////////////////////////////////////////////
-/// Odometry position                                                                
-////////////////////////////////////////////////////////////////////////////////
 typedef struct
 {
 	// Configuration
 	float wheel_diameter; // Size of encoder wheel in [mm]
-	float axis_distance; 
+	float axis_distance;
 
 	// Values
 	float x; 			// X position
@@ -169,21 +144,18 @@ typedef struct
 
 } globalOdometry;
 
-////////////////////////////////////////////////////////////////////////////////
-/// Global Structure                                                            
-////////////////////////////////////////////////////////////////////////////////
 typedef struct
 {
-  volatile const globalVersion       ver; // Software version 
+  volatile const globalVersion       ver; // Software version
   volatile globalEnvironment         env; // Environment version
   volatile globalStatus              sts; // System status
-  
+
   volatile globalMotorConfiguration  mca; // Motor A configuration
   volatile globalMotorConfiguration  mcb; // Motor B configuration
 
   volatile globalMotorValues         mva; // Motor A values
   volatile globalMotorValues         mvb; // Motor B values
- 
+
   volatile globalMove                bba; // Movement Unit A configuration
   volatile globalMove                bbb; // Movement Unit B configuration
 
@@ -211,13 +183,4 @@ typedef struct
 
 #endif
 
-////////////////////////////////////////////////////////////////////////////////
-/// Recording space for data logging                                            
-////////////////////////////////////////////////////////////////////////////////
 #define RECORD_LENGTH 1024
-
-
-////////////////////////////////////////////////////////////////////////////////
-/// End of file                                                                 
-////////////////////////////////////////////////////////////////////////////////
-

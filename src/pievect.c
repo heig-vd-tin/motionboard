@@ -1,29 +1,7 @@
-////////////////////////////////////////////////////////////////////////////////
-///  _   _        _                            _                                
-/// | | | |      |_|                          | |                               
-/// | |_| |_____  _ _____           _     _ __| |                               
-/// | |_  | ___ || |  _  \  _____  \ \  / // _  |                               
-/// | | | | ____|| | |_| | (_____)  \ \/ /( (_| |                               
-/// |_| |_|_____)|_|___  |           \__/  \____|                               
-///                  __| | Haute Ecole d'Ingenieurs                             
-///                 |___/  et de Gestion - Vaud                                 
-///                                                                             
-/// @title    Logiciel de contrôle de moteur pour la carte "motionboard"        
-/// @context  Coupe suisse de robotique 2007                                    
-/// @author   Y. Chevallier <nowox@kalios.ch>                                   
-/// @file     pievect.c                                                         
-/// @language ASCII/C                                                           
-/// @svn      $Id: main.c 134 2007-03-09 18:19:18Z ychevall@heig-vd.ch $        
-///                                                                             
-////////////////////////////////////////////////////////////////////////////////
-       
-////////////////////////////////////////////////////////////////////////////////
-/// Includes files                                                              
-////////////////////////////////////////////////////////////////////////////////
-#include "device.h"    
-#include "common.h"  
+#include "device.h"
+#include "common.h"
 
-const struct PIE_VECT_TABLE PieVectTableInit = 
+const struct PIE_VECT_TABLE PieVectTableInit =
 {
 	PIE_RESERVED,  // 0  Reserved space
 	PIE_RESERVED,  // 1  Reserved space
@@ -139,7 +117,7 @@ const struct PIE_VECT_TABLE PieVectTableInit =
 	rsvd_ISR,        // 8.6
 	rsvd_ISR,        // 8.7
 	rsvd_ISR,        // 8.8
-      
+
 	// Group 9 PIE Vectors
 	SCIRXINTA_ISR,   // 9.1 SCI-A
 	SCITXINTA_ISR,   // 9.2 SCI-A
@@ -159,7 +137,7 @@ const struct PIE_VECT_TABLE PieVectTableInit =
 	rsvd_ISR,        // 10.6
 	rsvd_ISR,        // 10.7
 	rsvd_ISR,        // 10.8
-				
+
 	// Group 11 PIE Vectors
 	rsvd_ISR,        // 11.1
 	rsvd_ISR,        // 11.2
@@ -169,7 +147,7 @@ const struct PIE_VECT_TABLE PieVectTableInit =
 	rsvd_ISR,        // 11.6
 	rsvd_ISR,        // 11.7
 	rsvd_ISR,        // 11.8
-		
+
 	// Group 12 PIE Vectors
 	rsvd_ISR,        // 12.1
 	rsvd_ISR,        // 12.2
@@ -181,28 +159,23 @@ const struct PIE_VECT_TABLE PieVectTableInit =
 	rsvd_ISR,        // 12.8
 };
 
-////////////////////////////////////////////////////////////////////////////////
-/// InitPieVectTable.                                                           
-/// This function initializes the PIE vector table to a known state.            
-/// This function must be executed after boot time.                             
-////////////////////////////////////////////////////////////////////////////////
-void 
+/**
+ * InitPieVectTable.
+ * This function initializes the PIE vector table to a known state.
+ * This function must be executed after boot time.
+ */
+void
 InitPieVectTable(void)
 {
 	int16	i;
 	Uint32 *Source = (void *) &PieVectTableInit;
 	Uint32 *Dest = (void *) &PieVectTable;
-		
-	EALLOW;	
+
+	EALLOW;
 	for(i=0; i < 128; i++)
-		*Dest++ = *Source++;	
+		*Dest++ = *Source++;
 	EDIS;
 
 	// Enable the PIE Vector Table
-	PieCtrlRegs.PIECTRL.bit.ENPIE = 1;				
+	PieCtrlRegs.PIECTRL.bit.ENPIE = 1;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-/// End of file.                                                                
-////////////////////////////////////////////////////////////////////////////////
-

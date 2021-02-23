@@ -1,43 +1,22 @@
-///  _   _        _                            _                                
-/// | | | |      |_|                          | |                               
-/// | |_| |_____  _ _____           _     _ __| |                               
-/// | |_  | ___ || |  _  \  _____  \ \  / // _  |                               
-/// | | | | ____|| | |_| | (_____)  \ \/ /( (_| |                               
-/// |_| |_|_____)|_|___  |           \__/  \____|                               
-///                  __| | Haute Ecole d'Ingenieurs                             
-///                 |___/  et de Gestion - Vaud                                 
-///                                                                             
-/// @title    Logiciel de contrôle de moteur pour la carte "motionboard"        
-/// @context  Coupe suisse de robotique 2007                                    
-/// @author   Y. Chevallier <nowox@kalios.ch>                                   
-/// @file     hall.c                                                            
-/// @language ASCII/C                                                           
-/// @svn      $Id: hall.c 126 2007-03-08 00:02:51Z ychevall@heig-vd.ch $        
-///                                                                             
-////////////////////////////////////////////////////////////////////////////////
+#include "device.h"
+#include "common.h"
 
-////////////////////////////////////////////////////////////////////////////////
-/// Includes files                                                              
-////////////////////////////////////////////////////////////////////////////////
-#include "device.h"    
-#include "common.h"  
-
-////////////////////////////////////////////////////////////////////////////////
-/// Functions that will be run from RAM need to be assigned to                  
-/// a different section. This section will then be mapped to a load and         
-/// run address using the linker cmd file.                                      
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * Functions that will be run from RAM need to be assigned to
+ * a different section. This section will then be mapped to a load and
+ * run address using the linker cmd file.
+ */
 #pragma CODE_SECTION(InitFlash, "ramfuncs");
 
-////////////////////////////////////////////////////////////////////////////////
-/// InitSysCtrl.                                                                
-/// This function initializes the System Control registers to a known state.    
-/// - Disables the watchdog                                                     
-/// - Set the PLLCR for proper SYSCLKOUT frequency                              
-/// - Set the pre-scaler for the high and low frequency peripheral clocks       
-/// - Enable the clocks to the peripherals                                      
-////////////////////////////////////////////////////////////////////////////////
-void 
+/**
+ * InitSysCtrl.
+ * This function initializes the System Control registers to a known state.
+ * - Disables the watchdog
+ * - Set the PLLCR for proper SYSCLKOUT frequency
+ * - Set the pre-scaler for the high and low frequency peripheral clocks
+ * - Enable the clocks to the peripherals
+ */
+void
 InitSysCtrl(void)
 {
 	// Disable the watchdog
@@ -52,21 +31,21 @@ InitSysCtrl(void)
 
 	#ifdef RELEASE
 		// Copy ramfuncs section to Ram
-		MemCopy(&RamfuncsLoadStart, &RamfuncsLoadEnd, &RamfuncsRunStart);   
+		MemCopy(&RamfuncsLoadStart, &RamfuncsLoadEnd, &RamfuncsRunStart);
 
 		// Initialise Flash
 		InitFlash();
 	#endif
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/// InitFlash.                                                                  
-/// This function initializes the Flash Control registers                       
-/// CAUTION:                                                                    
-/// This function MUST be executed out of RAM. Executing it                     
-/// out of OTP/Flash will yield unpredictable results                           
-////////////////////////////////////////////////////////////////////////////////
-void 
+/**
+ * InitFlash.
+ * This function initializes the Flash Control registers
+ * CAUTION:
+ * This function MUST be executed out of RAM. Executing it
+ * out of OTP/Flash will yield unpredictable results
+ */
+void
 InitFlash(void)
 {
 	EALLOW;
@@ -77,8 +56,8 @@ InitFlash(void)
 
 	// CAUTION:
 	// Minimum waitstates required for the flash operating
-	// at a given CPU rate must be characterized by TI. 
-	// Refer to the datasheet for the latest information.  
+	// at a given CPU rate must be characterized by TI.
+	// Refer to the datasheet for the latest information.
 
 	// Set the Paged Waitstate for the Flash
 	FlashRegs.FBANKWAIT.bit.PAGEWAIT = 2;
@@ -91,22 +70,21 @@ InitFlash(void)
 
 	// CAUTION:
 	// ONLY THE DEFAULT VALUE FOR THESE 2 REGISTERS SHOULD BE USED
-	FlashRegs.FSTDBYWAIT.bit.STDBYWAIT = 0x01FF;       
-	FlashRegs.FACTIVEWAIT.bit.ACTIVEWAIT = 0x01FF;   
+	FlashRegs.FSTDBYWAIT.bit.STDBYWAIT = 0x01FF;
+	FlashRegs.FACTIVEWAIT.bit.ACTIVEWAIT = 0x01FF;
 	EDIS;
 
 	//Force a pipeline flush to ensure that the write to
-	//the last register configured occurs before returning. 
+	//the last register configured occurs before returning.
 	asm(" RPT #7 || NOP");
-}	
+}
 
-
-////////////////////////////////////////////////////////////////////////////////
-/// ServiceDog.                                                                 
-/// This function resets the watchdog timer.                                    
-/// Enable this function for using ServiceDog in the application                
-////////////////////////////////////////////////////////////////////////////////
-void 
+/**
+ * ServiceDog.
+ * This function resets the watchdog timer.
+ * Enable this function for using ServiceDog in the application
+ */
+void
 ServiceDog(void)
 {
 	EALLOW;
@@ -115,12 +93,7 @@ ServiceDog(void)
 	EDIS;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/// DisableDog.                                                                 
-/// This function resets the watchdog timer.                                    
-/// Enable this function for using ServiceDog in the application                
-////////////////////////////////////////////////////////////////////////////////
-void 
+void
 DisableDog(void)
 {
 	EALLOW;
@@ -128,21 +101,17 @@ DisableDog(void)
 	EDIS;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/// InitPll.                                                                    
-/// This function initializes the PLLCR register.                               
-////////////////////////////////////////////////////////////////////////////////
-void 
+void
 InitPll(Uint16 val, Uint16 clkindiv)
 {
-	volatile Uint16 iVol;   
+	volatile Uint16 iVol;
 
 	// Make sure the PLL is not running in limp mode
 	if (SysCtrlRegs.PLLSTS.bit.MCLKSTS != 0)
 	{
 		// Missing external clock has been detected
 		// Replace this line with a call to an appropriate
-		// SystemShutdown(); function. 
+		// SystemShutdown(); function.
 		asm("        ESTOP0");
 	}
 
@@ -152,10 +121,10 @@ InitPll(Uint16 val, Uint16 clkindiv)
 	{
 		 SysCtrlRegs.PLLSTS.bit.CLKINDIV = 0;
 	}
-   
+
 	// Change the PLLCR
 	if (SysCtrlRegs.PLLCR.bit.DIV != val)
-	{      		
+	{
 		// Before setting PLLCR turn off missing clock detect logic
 		EALLOW;
 		SysCtrlRegs.PLLSTS.bit.MCLKOFF = 1;
@@ -164,21 +133,21 @@ InitPll(Uint16 val, Uint16 clkindiv)
 
 		// Optional: Wait for PLL to lock.
 		// During this time the CPU will switch to OSCCLK/2 until
-		// the PLL is stable.  Once the PLL is stable the CPU will 
-		// switch to the new PLL value. 
+		// the PLL is stable.  Once the PLL is stable the CPU will
+		// switch to the new PLL value.
 		//
 		// This time-to-lock is monitored by a PLL lock counter.
-		// 
-		// Code is not required to sit and wait for the PLL to lock.   
-		// However, if the code does anything that is timing critical, 
-		// and requires the correct clock be locked, then it is best to 
-		// wait until this switching has completed.  
+		//
+		// Code is not required to sit and wait for the PLL to lock.
+		// However, if the code does anything that is timing critical,
+		// and requires the correct clock be locked, then it is best to
+		// wait until this switching has completed.
 
 		// Wait for the PLL lock bit to be set.
 		// Note this bit is not available on 281x devices.  For those devices
-		// use a software loop to perform the required count. 
+		// use a software loop to perform the required count.
 
-		// The watchdog should be disabled before this loop, or fed within 
+		// The watchdog should be disabled before this loop, or fed within
 		// the loop via ServiceDog().
 
 		DisableDog();
@@ -191,22 +160,22 @@ InitPll(Uint16 val, Uint16 clkindiv)
 
 		EALLOW;
 		SysCtrlRegs.PLLSTS.bit.MCLKOFF = 0;
-		SysCtrlRegs.PLLSTS.bit.CLKINDIV != clkindiv;      
-		EDIS;   
+		SysCtrlRegs.PLLSTS.bit.CLKINDIV != clkindiv;
+		EDIS;
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/// InitPeripheralClocks.                                                       
-/// This function initializes the clocks to the peripheral modules.             
-/// First the high and low clock prescalers are set                             
-/// Second the clocks are enabled to each peripheral.                           
-/// To reduce power, leave clocks to unused peripherals disabled                
-///                                                                             
-/// Note: If a peripherals clock is not enabled then you cannot                 
-/// read or write to the registers for that peripheral                          
-////////////////////////////////////////////////////////////////////////////////
-void 
+/**
+ * InitPeripheralClocks.
+ * This function initializes the clocks to the peripheral modules.
+ * First the high and low clock prescalers are set
+ * Second the clocks are enabled to each peripheral.
+ * To reduce power, leave clocks to unused peripherals disabled
+ *
+ * Note: If a peripherals clock is not enabled then you cannot
+ * read or write to the registers for that peripheral
+ */
+void
 InitPeripheralClocks(void)
 {
   EALLOW;
@@ -217,10 +186,10 @@ InitPeripheralClocks(void)
 
 	// XCLKOUT to SYSCLKOUT ratio.  By default XCLKOUT = 1/4 SYSCLKOUT
   SysCtrlRegs.XCLK.bit.XCLKOUTDIV=2;
-      	
+
 	// Peripheral clock enables set for the selected peripherals.
 	// If you are not using a peripheral leave the clock off
-	// to save on power. 
+	// to save on power.
 	SysCtrlRegs.PCLKCR0.bit.ADCENCLK = 1;    // ADC
 
 	SysCtrlRegs.PCLKCR0.bit.I2CAENCLK = 1;   // I2C
@@ -248,27 +217,19 @@ InitPeripheralClocks(void)
 	SysCtrlRegs.PCLKCR1.bit.EQEP1ENCLK = 1;  // eQEP1
   SysCtrlRegs.PCLKCR1.bit.EQEP2ENCLK = 1;  // eQEP2
 
-  SysCtrlRegs.PCLKCR0.bit.ECANAENCLK=1;    // eCAN-A 
+  SysCtrlRegs.PCLKCR0.bit.ECANAENCLK=1;    // eCAN-A
 
-  SysCtrlRegs.PCLKCR0.bit.TBCLKSYNC = 1;   // Enable TBCLK within the ePWM  
-                           
+  SysCtrlRegs.PCLKCR0.bit.TBCLKSYNC = 1;   // Enable TBCLK within the ePWM
+
   EDIS;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/// MemCopy.                                                                    
-////////////////////////////////////////////////////////////////////////////////
-void 
+void
 MemCopy(Uint16 *SourceAddr, Uint16* SourceEndAddr, Uint16* DestAddr)
 {
     while(SourceAddr < SourceEndAddr)
-    { 
+    {
        *DestAddr++ = *SourceAddr++;
     }
     return;
-} 
-
-////////////////////////////////////////////////////////////////////////////////
-/// Includes files                                                              
-////////////////////////////////////////////////////////////////////////////////
-
+}

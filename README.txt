@@ -1,7 +1,8 @@
-Logiciel pour la carte motionboard développé dans le cadre du concours de 
-robotique 2007 à la HEIG-VD. Le logiciel est capable de gérer:
+# Motionboard
 
-- Deux moteurs BLDC avec boucle de position, vitesse et couple. 
-Les consignes de courant sont sinusoïdales
+Logiciel pour la carte motionboard dÃ©veloppÃ© dans le cadre du concours de
+robotique 2007 Ã  la HEIG-VD. Le logiciel est capable de gÃ©rer :
 
-- La communication est développée avec le protocole I2C lui même intégré dans ce logiciel. 
+- Deux moteurs BLDC avec boucle de position, vitesse et couple.
+Les consignes de courant sont sinusoÃ¯dales
+- La communication est dÃ©veloppÃ©e avec le protocole I2C lui mÃªme intÃ©grÃ© dans ce logiciel.
